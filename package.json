@@ -13,6 +13,7 @@
     "@clerk/nextjs": "^5.7.5",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.19.1",
+    "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

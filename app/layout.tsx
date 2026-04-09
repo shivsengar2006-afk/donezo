@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import { Manrope, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { RegisterSW } from "@/components/register-sw";
 
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <RegisterSW />
           <Toaster richColors position="top-right" />
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
