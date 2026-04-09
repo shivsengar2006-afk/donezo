@@ -7,14 +7,15 @@ const createSubtaskSchema = z.object({
   title: z.string().min(1),
 });
 
-export async function POST(req: Request, { params }: { params: { taskId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ taskId: string }> }) {
+  const { taskId } = await params;
   const profile = await getCurrentProfile();
   if (!profile) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
   const data = createSubtaskSchema.parse(body);
 
-  const task = await db.task.findFirst({ where: { id: params.taskId, userId: profile.id } });
+  const task = await db.task.findFirst({ where: { id: taskId, userId: profile.id } });
   if (!task) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const subtask = await db.subtask.create({

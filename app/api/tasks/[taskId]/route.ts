@@ -15,13 +15,14 @@ const updateTaskSchema = z.object({
   reminderOffsets: z.array(z.number().int()).optional().default([]),
 });
 
-export async function PATCH(req: Request, { params }: { params: { taskId: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ taskId: string }> }) {
+  const { taskId } = await params;
   try {
     const profile = await getCurrentProfile();
     if (!profile) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const existing = await db.task.findFirst({
-      where: { id: params.taskId, userId: profile.id },
+      where: { id: taskId, userId: profile.id },
     });
     if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -68,12 +69,13 @@ export async function PATCH(req: Request, { params }: { params: { taskId: string
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { taskId: string } }) {
+export async function DELETE(_: Request, { params }: { params: Promise<{ taskId: string }> }) {
+  const { taskId } = await params;
   const profile = await getCurrentProfile();
   if (!profile) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const existing = await db.task.findFirst({
-    where: { id: params.taskId, userId: profile.id },
+    where: { id: taskId, userId: profile.id },
   });
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
