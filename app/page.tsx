@@ -56,9 +56,9 @@ export default function HomePage() {
             <SignedIn>
               <Link href="/dashboard" className="rounded-full bg-white px-6 py-3 font-semibold text-black">Go to dashboard</Link>
             </SignedIn>
-            <button className="group inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-white/80 transition hover:border-white/40 hover:text-white">
+            <Link href="#vibe" className="group inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-white/80 transition hover:border-white/40 hover:text-white">
               See the vibe <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-            </button>
+            </Link>
           </div>
         </motion.div>
 
@@ -67,6 +67,7 @@ export default function HomePage() {
           animate="visible"
           variants={fadeUp}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
+          id="vibe"
           className="mt-8 grid gap-4 md:grid-cols-3"
         >
           {[

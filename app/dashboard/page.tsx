@@ -4,6 +4,9 @@ import { DashboardShell } from "@/components/dashboard-shell";
 import { TaskForm } from "@/components/task-form";
 import { TaskCard } from "@/components/task-card";
 import { StatsCards } from "@/components/stats-cards";
+import { StreakCard } from "@/components/streak-card";
+import { FocusCard } from "@/components/focus-card";
+import { NotificationCenter } from "@/components/notification-center";
 
 export default async function DashboardPage() {
   const profile = await getCurrentProfile();
@@ -14,10 +17,18 @@ export default async function DashboardPage() {
     include: { subtasks: true, reminders: true },
     orderBy: [{ completed: "asc" }, { dueDate: "asc" }, { createdAt: "desc" }],
   });
+  const overdueCount = tasks.filter((t) => !t.completed && t.dueDate && new Date(t.dueDate).getTime() < Date.now()).length;
 
   return (
     <DashboardShell>
-      <StatsCards xp={profile.xp} level={profile.level} streak={profile.streak} total={tasks.filter((t) => !t.completed).length} />
+      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
+        <StatsCards xp={profile.xp} level={profile.level} streak={profile.streak} total={tasks.filter((t) => !t.completed).length} />
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+          <StreakCard streak={profile.streak} best={profile.bestStreak} />
+          <FocusCard />
+          <NotificationCenter overdue={overdueCount} />
+        </div>
+      </div>
       <div className="grid gap-4 lg:grid-cols-[420px_1fr]">
         <TaskForm />
         <div className="space-y-4">

@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { RegisterSW } from "@/components/register-sw";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" className={`${display.variable} ${body.variable}`}>
         <body className="noise">
           {children}
+          <RegisterSW />
           <Toaster richColors position="top-right" />
         </body>
       </html>

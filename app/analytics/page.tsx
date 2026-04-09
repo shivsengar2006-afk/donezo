@@ -1,6 +1,8 @@
 import { DashboardShell } from "@/components/dashboard-shell";
 import { db } from "@/lib/db";
 import { getCurrentProfile } from "@/lib/auth";
+import { AnalyticsChart } from "@/components/analytics-chart";
+import { Priority } from "@prisma/client";
 
 export default async function AnalyticsPage() {
   const profile = await getCurrentProfile();
@@ -10,6 +12,14 @@ export default async function AnalyticsPage() {
   const completed = tasks.filter((t) => t.completed).length;
   const pending = tasks.filter((t) => !t.completed).length;
   const overdue = tasks.filter((t) => !t.completed && t.dueDate && new Date(t.dueDate).getTime() < Date.now()).length;
+  const total = tasks.length || 1;
+  const completionRate = Math.round((completed / total) * 100);
+  const totals: Record<Priority, number> = {
+    LOW: tasks.filter((t) => t.priority === "LOW").length,
+    MEDIUM: tasks.filter((t) => t.priority === "MEDIUM").length,
+    HIGH: tasks.filter((t) => t.priority === "HIGH").length,
+    CRITICAL: tasks.filter((t) => t.priority === "CRITICAL").length,
+  };
 
   return (
     <DashboardShell>
@@ -29,10 +39,13 @@ export default async function AnalyticsPage() {
           </div>
         ))}
       </div>
-      <div className="glass rounded-[28px] p-6">
-        <p className="text-white/55">Streak</p>
-        <p className="mt-2 text-4xl font-black">{profile.streak} days</p>
-        <p className="mt-1 text-white/40">Best streak: {profile.bestStreak} days</p>
+      <div className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
+        <AnalyticsChart totals={totals} />
+        <div className="glass rounded-[28px] p-6">
+          <p className="text-white/55">Completion rate</p>
+          <p className="mt-2 text-4xl font-black">{completionRate}%</p>
+          <p className="mt-1 text-white/40">Streak: {profile.streak} days (best {profile.bestStreak})</p>
+        </div>
       </div>
     </DashboardShell>
   );
