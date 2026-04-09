@@ -63,3 +63,5 @@ Create `vercel.json`:
 - Streaks increment once per day on first completion.
 - Reminder ladder supports multiple scheduled sends per task.
 - The reminders endpoint is protected by `CRON_SECRET`.
+
+<!-- redeploy ping -->
