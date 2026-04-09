@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ReminderMode {
+  CHILL
+  FOCUS
+  BEAST
+}
+
+enum EnergyLevel {
+  LOW
+  MEDIUM
+  DEEP
+}
+
+model UserProfile {
+  id             String   @id @default(cuid())
+  clerkUserId    String   @unique
+  email          String   @unique
+  username       String?
+  xp             Int      @default(0)
+  level          Int      @default(1)
+  streak         Int      @default(0)
+  bestStreak     Int      @default(0)
+  lastStreakDate DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tasks          Task[]
+  sessions       FocusSession[]
+}
+
+model Task {
+  id             String        @id @default(cuid())
+  title          String
+  description    String?
+  completed      Boolean       @default(false)
+  completedAt    DateTime?
+  dueDate        DateTime?
+  priority       Priority      @default(MEDIUM)
+  energyLevel    EnergyLevel   @default(MEDIUM)
+  reminderMode   ReminderMode  @default(CHILL)
+  points         Int           @default(10)
+  tags           String[]
+  orderIndex     Int           @default(0)
+  isOverdueAlert Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  userId         String
+  user           UserProfile   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subtasks       Subtask[]
+  reminders      Reminder[]
+}
+
+model Subtask {
+  id         String   @id @default(cuid())
+  title      String
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  taskId     String
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Reminder {
+  id            String   @id @default(cuid())
+  remindAt      DateTime
+  sent          Boolean  @default(false)
+  channel       String   @default("in_app")
+  offsetMinutes Int?
+  sequence      Int      @default(0)
+  createdAt     DateTime @default(now())
+  taskId        String
+  task          Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model FocusSession {
+  id        String      @id @default(cuid())
+  taskTitle String
+  minutes   Int
+  completed Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  userId    String
+  user      UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

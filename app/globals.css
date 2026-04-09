@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 8 8 14;
+  --card: 16 16 24;
+  --border: 255 255 255;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  @apply bg-[#0a0a12] text-white antialiased;
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  background-image:
+    radial-gradient(circle at top right, rgba(124, 58, 237, 0.28), transparent 28%),
+    radial-gradient(circle at left bottom, rgba(34, 211, 238, 0.18), transparent 26%),
+    radial-gradient(circle at 40% 20%, rgba(251, 113, 133, 0.12), transparent 40%);
+}
+
+.glass {
+  @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+}
+
+.glow {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(124,58,237,0.25);
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #f472b6 0%, #a78bfa 40%, #22d3ee 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.noise::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+  z-index: -1;
+}
